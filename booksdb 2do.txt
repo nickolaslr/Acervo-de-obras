@@ -1,0 +1,66 @@
+Software para gerenciar quadrinhos e livros
+
+Murillo Isidoro de Medereiros
+
+
+Construir uma aplicacao
+
+Regras de neogcio
+
+Input de dados no terminal
+
+Nome da obra
+Autor
+Quantas paginas tem
+Tipo Livro ou Quadrinho
+Cadastro de categoria
+Gerenciamento em memoria
+
+Tratativa, numero de pagina, só numero
+Categoria, só as cadastradas
+Validar se o dado condiz com o que é esperado
+Pensar no usuario
+Retornar mensagem de erro e como resolver
+Não permitir livro repetido
+
+Github
+
+21/02/24 Apresentação
+
+Estudar conexão com banco de dados, qualquer banco
+
+Listagem do banco de dados
+
+
+books
+	id
+	title
+	description
+	pages	
+	ISBN
+	genre_id
+	category_id
+
+books_authors
+	book_id
+	author_id
+
+authors
+	id
+	name
+	bio
+	
+genres
+	id
+	name
+	description
+
+category
+	id
+	name
+	description
+
+
+
+
+
