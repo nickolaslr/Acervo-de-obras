@@ -107,6 +107,8 @@ def main():
             if  not results:
                 print()
                 print("Não foi encontrado nenhum resultado para sua busca.")
+                cursor.close()
+                conn.close()
                 print()
                 time.sleep(3)               
                 main()
@@ -117,22 +119,63 @@ def main():
                 for row in results:
                     id, title, author, category, genre, description, pages, isbn = row
                     print(f"ID: {id}, Título: {title}, Autor: {author}, Categoria: {category}, Gênero: {genre}, Descrição: {description}, Número de Páginas: {pages}, ISBN: {isbn}")
+                    cursor.close()
+                    conn.close()
                     print()
                     time.sleep(3)                    
                     main()
 
         else:
             print("Opção inválida.")
+            cursor.close()
+            conn.close()
         # 
     elif menu_choice == 2:
         print("Você escolheu a opção 2 - Inserir obra.")
         # Não deixar inserir obra duplicada!
 
+        conn = sqlite3.connect('booksdb.db')
+        cursor = conn.cursor()
+
+        title = input("Por favor insira o nome da obra:")
+        
+        check_query = "SELECT COUNT(*) FROM books WHERE title = ?"
+        cursor.execute(check_query, (title,))
+        existing_records = cursor.fetchone()[0]
+
+        if existing_records > 0:
+            cursor.close()
+            conn.close()
+            print("Essa obra já está cadastrada em nosso sistema.")
+            print()
+            time.sleep(3)                    
+            main()
+
+        else:
+
+            insert_query = """
+            INSERT INTO books (title, author_id, category_id, genre_id, description, pages, isbn)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """
+
+            author_id = input("Nome do autor: ") #Checar se autor já existe
+            category_id = input("Escolha uma categoria: ") #Fazer menu com categorias e generos pré-definidos para usuário escolher
+            genre_id = input("Escolha um gênero: ") #Fazer menu com categorias e generos pré-definidos para usuário escolher
+            description = input("Que tal inserir uma breve descrição: ") 
+            pages = input("Qual o número de páginas: ")
+            isbn = input("Qual o ISBN (International Standard Book Number/ Padrão Internacional de Numeração de Livro): ")
 
 
+            values = (title, author_id, category_id, genre_id, description, pages, isbn)
 
-
-
+            cursor.execute(insert_query, values)
+            conn.commit()
+            cursor.close()
+            conn.close()
+            print("Obra inserida com sucesso!")
+            print()
+            time.sleep(3)                    
+            main() 
 
 
 #if __name__ == "__main__": #boa prática, mas desnecessário?
