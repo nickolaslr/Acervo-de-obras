@@ -86,32 +86,32 @@ def main():
             search_value = input("\nQual o nome da obra? ")
 
             search_query = """
-                                SELECT books.id, books.title, authors.name AS author_name, category.name AS category_name, genre.name AS genre_name, books.description, books.pages, books.isbn
-                                FROM books
-                                JOIN authors ON books.author_id = authors.id
-                                JOIN category ON books.category_id = category.id
-                                JOIN genre ON books.genre_id = genre.id
-                                WHERE books.title LIKE ?
-                            """
+                SELECT books.id, books.title, authors.name AS author_name, category.name AS category_name, genre.name AS genre_name, books.description, books.pages, books.isbn
+                FROM books
+                JOIN authors ON books.author_id = authors.id
+                JOIN category ON books.category_id = category.id
+                JOIN genre ON books.genre_id = genre.id
+                WHERE books.title LIKE ?
+            """
 
-            cursor.execute(search_query, ('%' + search_value + '%',)) #aceitar qualquer sequencia de char
-            # Virgula para criar uma tupla
+            cursor.execute(search_query, ('%' + search_value + '%',))
 
             results = cursor.fetchall()
 
-            print("Debug:", results)
+            print("Debug:", results)#Não funciona
 
-            if  not results:
+            if not results:
                 print("\nNão foi encontrado nenhum resultado para sua busca.")
-                time.sleep(3)               
-            
+
             else:
-                print("\nForam encontradas as seguintes obras:") #Só encontra uma obra, tem que mostrar todas!!!
+                print("\nForam encontradas as seguintes obras:")
                 for row in results:
                     id, title, author, category, genre, description, pages, isbn = row
-                    print(f"ID: {id}, Título: {title}, Autor: {author}, Categoria: {category}, Gênero: {genre}, Descrição: {description}, Número de Páginas: {pages}, ISBN: {isbn}")
-                    time.sleep(3)                    
-                    
+                    print(f"ID: {id}, Título: {title}, Autor: {author}, Categoria: {category}, Gênero: {genre}, Descrição: {description}, Número de Páginas: {pages}, ISBN: {isbn}")                
+            
+            cursor.close()
+            conn.close()
+            time.sleep(3)  
             main()              
                   
             
@@ -139,20 +139,17 @@ def main():
 
             if  not results:
                 print("\nNão foi encontrado nenhum resultado para sua busca.")
-                cursor.close()
-                conn.close()
-                time.sleep(3)               
-                main()
             
             else:
                 print("\nForam encontradas as seguintes obras: ")
                 for row in results:
                     id, title, author, category, genre, description, pages, isbn = row
                     print(f"ID: {id}, Título: {title}, Autor: {author}, Categoria: {category}, Gênero: {genre}, Descrição: {description}, Número de Páginas: {pages}, ISBN: {isbn}")
-                    cursor.close()
-                    conn.close()
-                    time.sleep(3)                    
-                    main()
+                    
+            cursor.close()
+            conn.close()
+            time.sleep(3)                    
+            main()
 
         else:
             print("Opção inválida.")
@@ -180,21 +177,18 @@ def main():
             insert_query = "INSERT INTO authors (name) VALUES (?)"
             cursor.execute(insert_query, (author_name,))
             conn.commit()
-            author_id = cursor.lastrowid
+            author_id = cursor.lastrowid #salvar o id na variável para ser utilizada no query de insert na tabela books
             print(f"\nAutor {author_name} cadastrado com sucesso. ID: {author_id}")
 
         title = input("\nPor favor insira o nome da obra: ")
                 
         check_query = "SELECT COUNT(*) FROM books WHERE title = ?"
         cursor.execute(check_query, (title,))
-        existing_records = cursor.fetchone()[0]
+        existing_book = cursor.fetchone()[0]
 
-        if existing_records > 0:
-            cursor.close()
-            conn.close()
+        if existing_book > 0:
             print("\nEssa obra já está cadastrada em nosso sistema.")
-            time.sleep(3)                    
-            main()
+            
 
         else:
             insert_query = """
@@ -218,11 +212,15 @@ def main():
 
             cursor.execute(insert_query, values)
             conn.commit()
-            cursor.close()
-            conn.close()
             print("\nObra inserida com sucesso!")
-            time.sleep(3)                    
-            main() 
+        
+        cursor.close()
+        conn.close()
+        time.sleep(3)
+        main() 
 
 #if __name__ == "__main__": #boa prática, mas desnecessário?
 main()
+
+#Poderia fazer o check do ISBN
+#Poderia dar a opção de sair do programa a qualquer momento
