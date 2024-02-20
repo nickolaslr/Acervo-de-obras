@@ -38,7 +38,7 @@ def get_category_input():
             if 1 <= number <= 3:
                 return number
             else:
-                print("\nNúmero inválido. Por favor selecione um número de 1 and 3.")
+                print("\nNúmero inválido. Por favor selecione um número de 1 a 3.")
         else:
             print("\nPor favor selecione um número de 1 and 3.")
 
@@ -63,7 +63,7 @@ def get_genre_input():
             if 1 <= number <= 9:
                 return number
             else:
-                print("\nNúmero inválido. Por favor selecione um número de 1 and 9.")
+                print("\nNúmero inválido. Por favor selecione um número de 1 a 9.")
         else:
             print("\nPor favor selecione um número de 1 and 9.")
 
